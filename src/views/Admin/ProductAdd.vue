@@ -46,25 +46,30 @@
               </div>
             </li>
             <li class="list-group-item">
-              <button class="btn btn-sm btn-outline-primary" 
-                data-bs-toggle="modal" 
-                data-bs-target="#categoryModal" 
-                type="button">
-                Choose category
-              </button>
-              <hr>
-              <div class="categories-container mt-2 mb-2">
-                <div class="chip-container">
-                  <div class="chip" v-for="(chip, i) of categoryChips" :key="chip.label">
-                    {{chip}}
-                    <i class="fa fa-times" @click="deleteCategoryChip(i)"></i>
-                  </div>
-                </div>
+              <p>
+                <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="collapse" data-bs-target="#categoryCollapse" aria-expanded="false" aria-controls="collapseExample">
+                  Choose product category <i class="fa fa-chevron-down"></i>
+                </button>
+              </p>
+              <div class="collapse" id="categoryCollapse">
+                <ul class="list-group">
+                  <li class="list-group-item" v-for="category in categories" :key="category.id">
+                    <input class="form-check-input me-1" type="checkbox" v-bind:value="category.category" v-model="categoryArray">
+                    {{ category.category }}
+                  </li>
+                  <li class="list-group-item">
+                    <button class="btn btn-sm btn-outline-success" 
+                      @click="loadMoreCategories(nextPageUrl)"
+                      v-bind:class="{ 'disabled btn-outline-dark' : nextPageUrl == null }">
+                      Load more categories
+                    </button>
+                  </li>
+                </ul>
               </div>
             </li>
             <li class="list-group-item">
               <div class="mb-3">
-                <label class="form-label">Tags: </label>
+                <small class="text-muted">Tags: </small>
                 <input class="form-control" placeholder="Enter project tags"
                   v-model="tagInput"
                   @keypress.prevent.enter="submitTag" >
@@ -79,6 +84,9 @@
               </div>
             </li>
             <li class="list-group-item">
+              <small class="text-muted">Product variants:</small>
+            </li>
+            <li class="list-group-item">
               <div class="col-md-4">
                 <div class="d-grid">
                   <button class="btn btn-sm btn-outline-primary" type="submit" @click="submitProduct">
@@ -88,41 +96,6 @@
               </div>
             </li>
           </ul>
-          <!--================== CATEGORY MODAL ============== -->
-          <div class="modal fade" id="categoryModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Categories: </h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <ul class="list-group">
-                    <li class="list-group-item" v-for="category in categories" :key="category.id">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" v-bind:value="category.category" v-model="categoryChips">
-                        <label class="form-check-label" for="flexCheckDefault">
-                          {{ category.category }}
-                        </label>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="d-grid">
-                        <button class="btn btn-sm btn-outline-success"
-                          v-bind:class="{ 'disabled' : nextPageUrl == null }"
-                          @click="loadMoreCategories(nextPageUrl)">
-                          <i class="fa fa-chevron-down"></i>
-                        </button>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Save</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -152,7 +125,7 @@ export default {
       },
       images: [],
       tagInput: '',
-      categoryChips: [],
+      categoryArray: [],
       categoryUrl: 'api/categories/paginate/5'
     }
   },
@@ -187,11 +160,12 @@ export default {
     submitProduct() {
       let payload = {
         product: this.product,
-        images: this.images,
-        categories: [...this.categoryChips],
+        images: [...this.images],
+        categories: [...this.categoryArray],
         tags: [...this.tagChips],
       }
       this.addProduct(payload)
+      // console.log(payload)
     }
   },
   created() {

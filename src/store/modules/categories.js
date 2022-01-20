@@ -25,7 +25,6 @@ const actions = {
     axios.get(url)
     .then(res => {
       Swal.close()
-      console.log(res)
       commit('setCategories', res.data.categories.data)
       commit('setCategoryLinks', res.data.categories.links)
       commit('setNextPageUrl', res.data.categories.next_page_url)
@@ -75,7 +74,6 @@ const actions = {
       axios.get(url)
       .then(res => {
         Swal.close()
-        console.log(res)
         res.data.categories.data.forEach(category => commit('loadMoreCategories', category))
         commit('setNextPageUrl', res.data.categories.next_page_url)
       })

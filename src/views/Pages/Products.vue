@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      url: `/api/products/paginate/12?page=${this.$route.params.number}`
+      url: `/api/products/paginate/8?page=${this.$route.params.number}`
     }
   },
   computed: {
