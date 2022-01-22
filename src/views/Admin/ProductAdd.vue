@@ -107,6 +107,7 @@ import OffCanvas from '@/components/Admin/OffCanvas'
 import Navbar from '@/components/Admin/Navbar'
 import Sidebar from '@/components/Admin/Sidebar'
 import { mapGetters,  mapActions } from 'vuex'
+import Swal from 'sweetalert2'
  
 export default {
   name: 'ProductAdd',
@@ -126,7 +127,8 @@ export default {
       images: [],
       tagInput: '',
       categoryArray: [],
-      categoryUrl: 'api/categories/paginate/5'
+      categoryUrl: 'api/categories/paginate/5',
+      toast: null
     }
   },
   computed: {
@@ -164,8 +166,20 @@ export default {
         categories: [...this.categoryArray],
         tags: [...this.tagChips],
       }
-      this.addProduct(payload)
-      // console.log(payload)
+
+      if (this.product.name == "") {
+        Swal.fire("Product name is required")
+      } else if(this.product.description == "") {
+        Swal.fire("Product description is required")
+      } else if(this.product.price == "") {
+        Swal.fire("Product price is required")
+      } else if(this.product.shipping_fee == "") {
+        Swal.fire("Product shipping fee is required")
+      } else if(this.product.stock == "") {
+        Swal.fire("Product stock is required")
+      } else {
+        this.addProduct(payload)
+      }
     }
   },
   created() {

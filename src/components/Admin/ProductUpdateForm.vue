@@ -112,7 +112,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" data-bs-target="#editProductModal" data-bs-toggle="modal" @click="saveCategories">Save</button>
+          <button class="btn btn-sm btn-outline-danger" data-bs-target="#editProductModal" data-bs-toggle="modal">Cancel</button>
+          <button class="btn btn-sm btn-outline-success" data-bs-target="#editProductModal" data-bs-toggle="modal" @click="saveCategories">Save</button>
         </div>
       </div>
     </div>
@@ -159,6 +160,7 @@ export default {
     },
 
     saveCategories() {
+      this.product.categories = []
       console.log(this.editCategoryChips)
       this.editCategoryChips.forEach(category => {
         this.product.categories.push({ category: category })

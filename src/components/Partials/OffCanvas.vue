@@ -21,36 +21,35 @@
               <span class="ms-3">Categories</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="isAuthenticated">
             <router-link to="/cart" class="nav-link text-white">
               <i class="fa fa-shopping-cart"></i>
               <span class="ms-3">Cart</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="isAuthenticated == false">
             <router-link to="/login" class="nav-link text-white">
               <i class="fa fa-user"></i>
               <span class="ms-3">Join us</span>
             </router-link>
           </li>
-          <li>
+          <li v-if="isAuthenticated">
             <router-link to="/account" class="nav-link text-white">
               <i class="fa fa-user-circle"></i>
               <span class="ms-3">Account</span>
             </router-link>
           </li>
-          <hr>
-          <li>
+          <li v-if="isAdmin">
             <router-link to="/admin/dashboard" class="nav-link text-white">
               <i class="fa fa-dashboard"></i>
               <span class="ms-3">Dashboard</span>
             </router-link>
           </li>
-          <li>
-            <a href="#" class="nav-link text-white">
+          <li v-if="isAuthenticated">
+            <button class="nav-link text-white" @click="this.$store.dispatch('logoutUser')">
               <i class="fa fa-sign-out"></i>
               <span class="ms-3">Logout</span>
-            </a>
+            </button>
           </li>
         </ul>
       </div>
@@ -59,8 +58,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  name: 'OffCanvas'
+  name: 'OffCanvas',
+  computed: {
+    ...mapGetters(['isAuthenticated', 'isAdmin'])
+  }
 }
 </script>
 

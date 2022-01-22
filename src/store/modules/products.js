@@ -21,7 +21,7 @@ const actions = {
     showLoader("Loading")
     axios.get(url)
     .then(res => {
-      console.log(res)
+      // console.log(res)
       Swal.close()
       commit('setProducts', res.data.products.data)
       commit('setProductLinks', res.data.products.links)
@@ -84,7 +84,7 @@ const actions = {
       Swal.fire("Product added!")
     } catch (err) {
       Swal.close()
-      console.error(err.response)
+      console.error(err.response.data.errors)
     }
   },
 

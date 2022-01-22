@@ -133,9 +133,9 @@ export default {
       if(payload.variants.length == 0) {
         Swal.fire("Please add some variants")
       }else {
-        console.log(payload)
+        this.addVariants(payload)
+        // console.log(payload)
       }
-      // this.addVariants(payload)
     }
   }
 }

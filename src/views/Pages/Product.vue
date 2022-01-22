@@ -12,7 +12,10 @@
             <div class="product-image">
               <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                  <div class="carousel-item active" v-for="image in product.images" :key="image.id">
+                  <div class="carousel-item"
+                    v-for="(image, index) in product.images" 
+                    :key="image.id"
+                    v-bind:class="{ 'active' : index == 0 }">
                     <img v-bind:src="image.image" class="d-block w-100" alt="...">
                   </div>
                 </div>
@@ -51,14 +54,18 @@
                 <div class="row">
                   <div class="col-6 p-1">
                     <div class="d-grid">
-                      <button class="btn btn-sm btn-outline-dark" data-bs-toggle="modal" data-bs-target="#addToCartModal">
+                      <button 
+                        class="btn btn-sm btn-outline-success" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#addToCartModal"
+                        :class="{ 'disabled btn-outline-dark' : product.status != 'active' }">
                         Add to cart
                       </button>
                     </div>
                   </div>
                   <div class="col-6 p-1">
                     <div class="d-grid">
-                      <button class="btn btn-sm btn-outline-dark">
+                      <button class="btn btn-sm btn-outline-primary">
                         Save product
                       </button>
                     </div>
@@ -72,20 +79,20 @@
           <div class="col-md-12 p-1 mb-3">
             <ul class="list-group">
               <li class="list-group-item">
-                <span class="text-muted">Description: </span>
+                <small class="text-muted">Description: </small> <br>
                 {{ product.description }}
               </li>
               <li class="list-group-item">
-                <span class="text-muted">Tags: </span><br>
-                <button class="btn btn-sm btn-outline-dark mb-1 ms-1" 
+                <small class="text-muted">Tags: </small><br>
+                <button class="btn btn-sm btn-outline-success mb-1 ms-1" 
                   v-for="tag in product.tags" 
                   :key="tag.id">
                   {{ tag.tag }}
                 </button>
               </li>
               <li class="list-group-item">
-                <span class="text-muted">Categories: </span><br>
-                <button class="btn btn-sm btn-outline-dark mb-1 ms-1"
+                <small class="text-muted">Categories: </small><br>
+                <button class="btn btn-sm btn-outline-primary mb-1 ms-1"
                   v-for="category in product.categories"
                   :key="category.id">
                   {{ category.category }}
@@ -105,7 +112,7 @@
               <div class="modal-body">
                 <div>
                   <small class="text-muted">Quantity: </small>
-                  <input type="text" class="form-control ms-1">
+                  <input type="text" class="form-control ms-1" value="1">
                 </div>
                 <div class="variant-container">
                   <div v-for="variant in product.variants" :key="variant.id" class="mb-2">
@@ -117,8 +124,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-outline-primary">Add to cart</button>
               </div>
             </div>
           </div>
