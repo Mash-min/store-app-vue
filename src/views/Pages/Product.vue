@@ -55,12 +55,17 @@
                   <div class="col-6 p-1">
                     <div class="d-grid">
                       <button 
+                        v-if="isAuthenticated"
                         class="btn btn-sm btn-outline-success" 
                         data-bs-toggle="modal" 
                         data-bs-target="#addToCartModal"
                         :class="{ 'disabled btn-outline-dark' : product.status != 'active' }">
                         Add to cart
                       </button>
+                      <router-link to="/login" v-else 
+                        class="btn btn-outline-dark btn-sm">
+                        Login to your account
+                      </router-link>
                     </div>
                   </div>
                   <div class="col-6 p-1">
@@ -147,7 +152,7 @@ export default {
     OffCanvas, Navbar, Sidebar
   },
   computed: {
-    ...mapGetters(['product'])
+    ...mapGetters(['product', 'isAuthenticated'])
   },
   methods: {
     ...mapActions(['findProduct'])

@@ -43,6 +43,7 @@ const actions = {
   },
 
   async logoutUser({ commit }) {
+    showLoader("Logging out...")
     try {
       await axios.post('api/users/logout')
       commit('setUser', {})
