@@ -31,6 +31,7 @@ const actions = {
 
   findProduct({ commit }, slug) {
     commit('setProduct', {})
+    showLoader("Loading...")
     axios.get(`api/products/${slug}`)
     .then(res => {
       Swal.close()

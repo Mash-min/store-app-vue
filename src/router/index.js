@@ -147,21 +147,21 @@ router.beforeEach((to, from, next) => {
   store.dispatch('authenticate')
   if(to.matched.some(record => record.meta.auth == true)) {
       // ================= Check user token if null ================
-      if(sessionStorage.getItem('token') == null) {
+      if(localStorage.getItem('token') == null) {
         router.push({ path: '/login' })
       } else {
         next()
       }
   } else if(to.matched.some(record => record.meta.guest == true)) {
       // ================= Check user token if null ================
-      if(!sessionStorage.getItem('token') == null) {
-        router.push({ path: '/login' })
+      if(localStorage.getItem('token') != null) {
+        router.push({ path: '/' })
       } else {
         next()
       }
   } else if(to.matched.some(record => record.meta.admin == true)) {
       // ================= Check user token if null ================
-      if(sessionStorage.getItem('token') == null) {
+      if(localStorage.getItem('token') == null) {
         router.push({ path: '/login' })
       } else {
         store.dispatch('checkAdmin')

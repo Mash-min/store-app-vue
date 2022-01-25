@@ -20,7 +20,7 @@ const actions = {
     showLoader("Logging in...")
     try {
       const response = await axios.post('api/users/login', payload)
-      sessionStorage.setItem('token', response.data.token)
+      localStorage.setItem('token', response.data.token)
       commit('setUser', response.data.user)
       commit('authenticateUser', true)
       if(response.data.user.role == 'admin') {
@@ -48,7 +48,7 @@ const actions = {
       await axios.post('api/users/logout')
       commit('setUser', {})
       commit('authenticateUser', false)
-      sessionStorage.removeItem('token')
+      localStorage.removeItem('token')
       window.location.href = '/'
     } catch (error) {
       console.error(error.response)
