@@ -2,7 +2,6 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Variants</th>
         <th scope="col">Name</th>
         <th scope="col">Price</th>
         <th scope="col">Shipping fee</th>
@@ -12,17 +11,9 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="product in products" :key="product.id"
+      <tr v-for="(product, index) in products" :key="product.id"
         v-bind:class="{ 'table-danger text-muted' : product.status == 'archived'}">
-        <td>
-          <button class="btn btn-sm btn-outline-primary" 
-            data-bs-toggle="modal" 
-            data-bs-target="#addProductVariantModal"
-            @click="findProduct(product.slug)">
-            Add variant
-          </button>
-        </td>
-        <td class="fs-bolder">{{ product.name }}</td>
+        <td><small class="fw-bolder">{{ product.name }}</small></td>
         <td>₱ {{ product.price }}</td>
         <td>₱ {{ product.shipping_fee }}</td>
         <td>{{ product.stock }} pcs</td>
@@ -42,7 +33,7 @@
             <i class="fa fa-pencil"></i>
           </button>
           <button class="btn btn-sm btn-outline-danger ms-1 mb-1" 
-            @click="deleteProduct(product.id)">
+            @click="deleteProduct({ id: product.id, index })">
             <i class="fa fa-trash"></i>
           </button>
         </td>

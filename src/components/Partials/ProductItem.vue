@@ -7,25 +7,63 @@
         class="card-img-top" alt="...">
       <div class="card-body">
         <h5 class="card-title">{{ product.name }}</h5>
-        <small class="text-muted">{{ product.created_at }}</small>
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
-          <h5 class="text-success">₱ {{ product.price }}</h5>
+          <small class="text-muted">Price: </small><small class="text-success fw-bolder">₱ {{ product.price }}</small>
         </li>
-        <li class="list-group-item d-grid">
-          <router-link :to="'/products/' + product.slug" class="btn btn-primary btn-sm">
-            View product
-          </router-link>
+        <li class="list-group-item">
+          <div class="row">
+            <div class="col-3 p-1">
+              <div class="d-grid">
+                <button 
+                  :class="{ 'disabled' : product.status != 'active' }"
+                  class="btn btn-sm btn-outline-dark"
+                  data-bs-toggle="modal" 
+                  data-bs-target="#addToCartModal"
+                  @click="findProduct(product.slug)"
+                  v-if="isAuthenticated">
+                  <i class="fa fa-shopping-cart"></i>
+                </button>
+                <router-link 
+                  class="btn btn-sm btn-outline-dark"
+                  to="/login"
+                  v-else>
+                  <i class="fa fa-shopping-cart"></i>
+                </router-link>
+              </div>
+            </div>
+            <div class="col-9 p-1">
+              <div class="d-grid">
+                <router-link :to="'/products/' + product.slug" class="btn btn-outline-primary btn-sm">
+                  View product
+                </router-link>
+              </div>
+            </div>
+          </div>
         </li>
       </ul>
     </div>
   </div>
+  <CartAddModal 
+    v-bind:product="product"/>
 </template>
 
 <script>
+import CartAddModal from '@/components/Partials/CartAddModal'
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   name: 'ProductItem',
-  props: ['products']
+  components: {
+    CartAddModal
+  },
+  props: ['products'],
+  computed: {
+    ...mapGetters(['product', 'isAuthenticated'])
+  },
+  methods: {
+    ...mapActions(['findProduct'])
+  }
 }
 </script>

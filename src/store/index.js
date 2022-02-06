@@ -4,6 +4,8 @@ import categories from '@/store/modules/categories'
 import chips from '@/store/modules/chips'
 import users from '@/store/modules/users'
 import carts from '@/store/modules/carts'
+import savedProducts from '@/store/modules/savedProducts'
+import orders from '@/store/modules/orders'
 
 const store = createStore({
   modules: {
@@ -11,7 +13,9 @@ const store = createStore({
     categories, 
     chips,
     users,
-    carts
+    carts,
+    savedProducts,
+    orders
   }
 })
 

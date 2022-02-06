@@ -1,6 +1,6 @@
 import Swal from "sweetalert2"
 
-function showLoader(message) {
+export default function showLoader(message) {
   Swal.fire({
     title: message,
     html: `
@@ -13,5 +13,3 @@ function showLoader(message) {
     allowEscapeKey: false
   })
 }
-
-export default showLoader

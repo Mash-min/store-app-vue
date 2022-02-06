@@ -62,6 +62,7 @@ import Sidebar from '@/components/Admin/Sidebar'
 import CategoryTable from '@/components/Admin/CategoryTable'
 import Pagination from '@/components/Partials/Pagination'
 import { mapGetters, mapActions } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   name: 'AdminCategories',
@@ -70,7 +71,7 @@ export default {
   },
   data() {
     return {
-      url: 'api/categories/paginate/5',
+      url: 'api/categories/paginate/10',
       newCategory: ''
     }
   },
@@ -81,7 +82,11 @@ export default {
     ...mapActions(['fetchCategories', 'addCategory']), 
 
     submitCategory() {
-      this.addCategory({ category: this.newCategory})
+      if(this.newCategory == "" || this.newCategory == " ") {
+        Swal.fire({ title: 'Please add some category', icon: 'warning' })
+      } else {
+        this.addCategory({ category: this.newCategory})
+      }
     }
   },
   created() {

@@ -70,7 +70,7 @@
                   </div>
                   <div class="col-6 p-1">
                     <div class="d-grid">
-                      <button class="btn btn-sm btn-outline-primary">
+                      <button class="btn btn-sm btn-outline-primary" @click="saveProduct(product.id)">
                         Save product
                       </button>
                     </div>
@@ -84,12 +84,8 @@
           <div class="col-md-12 p-1 mb-3">
             <ul class="list-group">
               <li class="list-group-item">
-                <small class="text-muted">Description: </small> <br>
-                {{ product.description }}
-              </li>
-              <li class="list-group-item">
                 <small class="text-muted">Tags: </small><br>
-                <button class="btn btn-sm btn-outline-success mb-1 ms-1" 
+                <button class="btn btn-sm btn-outline-dark mb-1 ms-1 disabled" 
                   v-for="tag in product.tags" 
                   :key="tag.id">
                   {{ tag.tag }}
@@ -97,62 +93,21 @@
               </li>
               <li class="list-group-item">
                 <small class="text-muted">Categories: </small><br>
-                <button class="btn btn-sm btn-outline-primary mb-1 ms-1"
+                <button class="btn btn-sm btn-outline-dark mb-1 ms-1 disabled"
                   v-for="category in product.categories"
                   :key="category.id">
                   {{ category.category }}
                 </button>
               </li>
+              <li class="list-group-item">
+                <small class="text-muted">Description: </small> <br>
+                {{ product.description }}
+              </li>
             </ul>
           </div>
         </div>
-        <!-- MODAL -->
-        <div class="modal fade" id="addToCartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add to cart</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <div class="preview">
-                  <button class="btn btn-sm btn-outline-dark disabled ms-1">
-                    <i class="fa fa-chevron-right"></i> {{ cart.quantity }} pcs
-                  </button>
-                  <button class="btn btn-sm btn-outline-dark ms-1" v-for="variant in cart.variants" :key="variant">
-                    <i class="fa fa-chevron-right"></i> {{ variant.name }}
-                  </button>
-                </div>
-                <hr>
-                <div class="input-group mb-3">
-                  <button class="btn btn-outline-secondary" type="button" @click="cart.quantity += 1">
-                    <i class="fa fa-plus"></i>
-                  </button>
-                  <input type="text" class="form-control" disabled readonly v-model="cart.quantity">
-                  <button class="btn btn-outline-secondary" type="button" id="button-addon2" @click="cart.quantity -= 1">
-                    <i class="fa fa-minus"></i>
-                  </button>
-                </div>
-                <div class="variant-container">
-                  <div v-for="variant in product.variants" :key="variant.id" class="mb-2 mt-3">
-                    <span class="fw-bolder">{{ variant.title }}</span><br>
-                    <button 
-                      class="btn btn-sm btn-outline-dark m-1" 
-                      v-for="(item) in variant.items" 
-                      :key="item.id"
-                      @click="addVariant({ id: item.id, name: item.name, variant_id: item.variant_id })">
-                      {{ item.name }}
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-outline-primary" @click="submitCart">Add to cart</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CartAddModal 
+          v-bind:product="product"/>
       </div>
       <!-- CONTENT -->
     </div>
@@ -162,46 +117,19 @@
 import OffCanvas from '@/components/Partials/OffCanvas'
 import Navbar from '@/components/Partials/Navbar'
 import Sidebar from '@/components/Partials/Sidebar'
+import CartAddModal from '@/components/Partials/CartAddModal'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Product',
   components: {
-    OffCanvas, Navbar, Sidebar
-  },
-  data() {
-    return {
-      cart: {
-        quantity: 1,
-        variants: []
-      }
-    }
+    OffCanvas, Navbar, Sidebar, CartAddModal
   },
   computed: {
     ...mapGetters(['product', 'isAuthenticated'])
   },
   methods: {
-    ...mapActions(['findProduct', 'addToCart']),
-
-    submitCart() {
-      let items = []
-      this.cart.variants.forEach(variant => {
-        items.push(variant.id)
-      })
-      let payload = {
-        quantity: this.cart.quantity,
-        product_id: this.product.id,
-        variants: items
-      }
-      this.addToCart(payload)
-      // console.log(payload)
-    },
-
-    addVariant(payload) {
-      this.cart.variants.push(payload)
-      let data = Object.values(this.cart.variants.reduce((acc, cur) => Object.assign(acc, {[cur.variant_id]: cur}), {}))
-      this.cart.variants = data
-    }
+    ...mapActions(['findProduct', 'saveProduct']),
   },
   created() {
     this.findProduct(this.$route.params.slug)

@@ -6,13 +6,15 @@ import router from "../../router"
 const state = {
   user: {},
   isAuthenticated: false,
-  isAdmin: false
+  isAdmin: false,
+  dashboard: {}
 }
 
 const getters = {
   user: (state) => state.user,
   isAuthenticated: (state) => state.isAuthenticated,
-  isAdmin: (state) => state.isAdmin
+  isAdmin: (state) => state.isAdmin,
+  dashboard: (state) => state.dashboard
 }
 
 const actions = {
@@ -33,10 +35,14 @@ const actions = {
   },
 
   async registerUser({ commit }, payload) {
+    showLoader("Loading...")
     try {
       const response = await axios.post('api/users/register', payload)
-      commit('setUser', response)
-      console.log(response)
+      commit('setUser', response.data.user)
+      commit('authenticateUser', true)
+      localStorage.setItem('token', response.data.token)
+      window.location.href = "/account"
+      Swal.close()
     } catch(error) {
       console.error(error.response)
     }
@@ -64,6 +70,7 @@ const actions = {
         commit('setAdmin', true)
       }
     } catch (error) {
+      localStorage.removeItem('token')
       console.log(error.response)
       console.clear()
     }
@@ -79,13 +86,46 @@ const actions = {
     } catch(e) {
       router.push({ path: '/' })
     }
+  },
+
+  async updateUser({ commit }, payload) {
+    showLoader("Updating...")
+    try {
+      const response = await axios.put('api/users', payload)
+      Swal.fire({ title: 'Account updated', icon: 'success' })
+      commit('setUser', response.data.user)
+    } catch(e) {
+      Swal.close()
+      console.error(e.response)
+    }
+  },
+
+  async resetPassword(_, payload) {
+    showLoader("Updating...")
+    try {
+      const response = await axios.put('api/users/reset-password', payload)
+      Swal.fire({ title: response.data.message, icon: 'success' })
+    } catch(e) {
+      console.error(e.response)
+    }
+  },
+
+  async fetchDashboard({ commit }) {
+    try {
+      const response = await axios.get('api/users/dashboard')
+      commit('setDashboard', response.data)
+      console.log(response)
+    } catch(e) {
+      console.error(e.response)
+    }
   }
 }
 
 const mutations = {
   setUser: (state, user) => state.user = user,
   authenticateUser: (state, payload) => state.isAuthenticated = payload,
-  setAdmin: (state, payload) => state.isAdmin = payload
+  setAdmin: (state, payload) => state.isAdmin = payload,
+  setDashboard: (state, payload) => state.dashboard = payload
 }
 
 export default {

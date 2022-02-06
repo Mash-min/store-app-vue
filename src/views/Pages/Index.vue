@@ -10,7 +10,7 @@
         <Banner/>
         <div class="row mt-3 mb-3">
           <div class="d-flex justify-content-center">
-            <h5>Featured products</h5>
+            <h5>Latest products</h5>
           </div>
           <ProductItem v-bind:products="products"/>
         </div>
@@ -43,7 +43,7 @@ export default {
   },
   data() {
     return {
-      url: 'api/products/paginate/8'
+      url: 'api/products/paginate/12'
     }
   },
   computed: {

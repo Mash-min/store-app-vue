@@ -21,22 +21,24 @@
               <span class="ms-3">Categories</span>
             </router-link>
           </li>
-          <li v-if="isAuthenticated">
+          <li>
             <router-link to="/cart" class="nav-link text-white">
               <i class="fa fa-shopping-cart"></i>
-              <span class="ms-3">Cart</span>
+              <span class="ms-3">
+                Cart
+              </span>
+            </router-link>
+          </li>
+          <li>
+            <router-link to="/account" class="nav-link text-white">
+              <i class="fa fa-user-circle"></i>
+              <span class="ms-3">Account</span>
             </router-link>
           </li>
           <li v-if="isAuthenticated == false">
             <router-link to="/login" class="nav-link text-white">
               <i class="fa fa-user"></i>
               <span class="ms-3">Join us</span>
-            </router-link>
-          </li>
-          <li v-if="isAuthenticated">
-            <router-link to="/account" class="nav-link text-white">
-              <i class="fa fa-user-circle"></i>
-              <span class="ms-3">Account</span>
             </router-link>
           </li>
           <li v-if="isAdmin">

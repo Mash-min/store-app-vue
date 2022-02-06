@@ -4,6 +4,7 @@ import Products from '@/views/Pages/Products'
 import Product from '@/views/Pages/Product'
 import Categories from '@/views/Pages/Categories'
 import Cart from '@/views/Pages/Cart'
+import SavedProducts from '@/views/Pages/SavedProducts'
 import Login from '@/views/Pages/Login'
 import Register from '@/views/Pages/Register'
 import Account from '@/views/Pages/Account'
@@ -13,6 +14,7 @@ import ProductAdd from '@/views/Admin/ProductAdd'
 import AdminCategories from '@/views/Admin/Categories'
 import AdminOrders from '@/views/Admin/Orders'
 import AdminAccount from '@/views/Admin/Account'
+import NotFound from '@/views/Pages/NotFound'
 import store from '@/store'
 
 const routes = [
@@ -51,6 +53,15 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: Cart,
+    meta: {
+      auth: true
+    }
+  },
+  // ================= USER SAVED PRODUCTS =====================
+  {
+    path: '/saved-products',
+    name: 'SavedProducts',
+    component: SavedProducts,
     meta: {
       auth: true
     }
@@ -135,7 +146,17 @@ const routes = [
     meta: {
       admin: true
     }
+  },
+  {
+    path: '/not-found',
+    name: 'NotFound',
+    component: NotFound
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    component: NotFound
   }
+
 ]
 
 const router = createRouter({

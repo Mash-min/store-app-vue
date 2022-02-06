@@ -7,49 +7,32 @@
       <Sidebar/>
     </div>
     <div class="col-lg-9 col-md-12 mt-2">
-      <h3>Products</h3>
       <div class="row">
-        <div class="col-md-12">
-          <ul class="list-group m-1">
-            <li class="list-group-item">
+        <ProductTabs 
+          v-bind:tab="'products'"/>
+        <div class="search-form-container">
+          <div class="m-1">
+            <form @submit.prevent="submitSearch">
               <div class="d-flex">
-                <div class="col-8">
-                  <form action="">
-                    <div class="d-flex">
-                      <button class="btn btn-sm btn-outline-success" type="submit"><i class="fa fa-search"></i></button>
-                      <input type="text" class="form-control ms-1" placeholder="Search product here...">
-                    </div>
-                  </form>
-                </div>
-                <div class="col-4 ms-1">
-                  <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">All</option>
-                    <option value="2">Active</option>
-                    <option value="3">Archived</option>
-                  </select>
-                </div>
-              </div>  
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <router-link to="/admin/add-product" class="btn btn-sm btn-outline-primary">
-                <i class="fa fa-plus"></i> Add product  
-              </router-link>
-            </li>
-            <li class="list-group-item table-container">
-              <ProductTable
-                v-bind:products="products"/>
-            </li>
-            <li class="list-group-item d-flex justify-content-center">
-              <Pagination 
-                v-bind:linkData="productLinks"
-                v-on:emitLink="fetchProducts"/>
-            </li>
-          </ul>
+                <button class="btn btn-sm btn-primary">
+                  <i class="fa fa-search"></i>
+                </button>
+                <input type="text" class="form-control ms-1" placeholder="Search product..." v-model="search">
+                <button type="button" class="btn btn-sm btn-primary ms-1" @click="fetchProducts(url)">
+                  <i class="fa fa-refresh"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <ProductList/>
+        <div class="d-flex justify-content-center mt-3">
+          <Pagination 
+            v-bind:linkData="productLinks"
+            v-on:emitLink="fetchProducts"/>
         </div>
       </div>
       <ProductUpdateForm/>
-      <ProductAddVariant/>
     </div>
   </div>
 </template>
@@ -58,10 +41,10 @@
 import OffCanvas from '@/components/Admin/OffCanvas'
 import Navbar from '@/components/Admin/Navbar'
 import Sidebar from '@/components/Admin/Sidebar'
-import ProductTable from '@/components/Admin/ProductTable'
 import Pagination from '@/components/Partials/Pagination'
 import ProductUpdateForm from '@/components/Admin/ProductUpdateForm'
-import ProductAddVariant from '@/components/Admin/ProductAddVariant'
+import ProductTabs from '@/components/Admin/ProductTabs'
+import ProductList from '@/components/Admin/ProductList'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
@@ -70,21 +53,30 @@ export default {
     OffCanvas, 
     Navbar, 
     Sidebar, 
-    ProductTable, 
     Pagination, 
     ProductUpdateForm,
-    ProductAddVariant
+    ProductTabs,
+    ProductList
   },
   data() {
     return {
-      url: 'api/products/paginate/10'
+      url: 'api/products/paginate/15',
+      search: ''
     }
   },
   computed: {
-    ...mapGetters(['products', 'productLinks'])
+    ...mapGetters(['productLinks'])
   },
   methods: {
-    ...mapActions(['fetchProducts'])
+    ...mapActions(['fetchProducts', 'searchProduct']),
+
+    submitSearch() {
+      if(this.search != " " || this.search == null) {
+        this.searchProduct(this.search)
+      } else {
+        this.fetchProducts(this.url)
+      }
+    }
   },
   created() {
     this.fetchProducts(this.url)

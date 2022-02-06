@@ -3,8 +3,16 @@
     <div class="container-fluid container">
       <a class="navbar-brand" href="#">Admin Panel</a>
       <div class="d-flex">
-        <button class="btn btn-sm btn-outline-danger">Logout</button>
-        <button class="btn-sm btn btn-outline-primary d-lg-none d-sm-block d-xs-block ms-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBackdrop" aria-controls="offcanvasWithBackdrop">
+        <button 
+          class="btn btn-sm btn-outline-danger"
+          @click="logoutUser">
+          Logout
+        </button>
+        <button 
+          class="btn-sm btn btn-outline-primary d-lg-none d-sm-block d-xs-block ms-1" 
+          type="button" data-bs-toggle="offcanvas" 
+          data-bs-target="#offcanvasWithBackdrop" 
+          aria-controls="offcanvasWithBackdrop">
           <i class="fa fa-bars"></i>
         </button>
       </div>
@@ -13,7 +21,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  methods: {
+    ...mapActions(['logoutUser'])
+  }
 }
 </script>

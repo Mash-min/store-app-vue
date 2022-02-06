@@ -24,7 +24,8 @@ const actions = {
 
 const mutations = {
   addTagChip: (state, chips) => (state.chips.tags.push(chips)),
-  removeTagChip: (state, index) => (state.chips.tags.splice(index, 1))
+  removeTagChip: (state, index) => (state.chips.tags.splice(index, 1)),
+  clearTagChips: (state) => (state.chips.tags = [])
 }
 
 export default {

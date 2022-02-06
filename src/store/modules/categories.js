@@ -21,6 +21,8 @@ const getters = {
 
 const actions = {
   fetchCategories({ commit }, url) {
+    commit('setCategories', [])
+    commit('setCategoryLinks', [])
     showLoader("Loading...")
     axios.get(url)
     .then(res => {

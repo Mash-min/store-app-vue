@@ -3,16 +3,16 @@
     <table class="table">
       <thead>
         <tr>
-          <th>ID</th>
           <th>Name</th>
+          <!-- <th>ID</th> -->
           <th>Date added</th>
           <th>Options</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(category, index) in categories" :key="category.id">
-          <td>{{ category.slug }}</td>
           <td>{{ category.category }}</td>
+          <!-- <td>{{ category.slug }}</td> -->
           <td>{{ category.created_at }}</td>
           <td>
             <button class="btn btn-sm btn-outline-success ms-1" @click="findCategory(category.id)" data-bs-toggle="modal" data-bs-target="#editCategoryModal">

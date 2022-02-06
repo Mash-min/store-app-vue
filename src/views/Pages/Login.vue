@@ -31,9 +31,9 @@
                     Login
                   </button>
                   <span class="text-muted">or</span>
-                  <a href="/register">
+                  <router-link to="/register">
                     <small>Create account</small>
-                  </a>
+                  </router-link>
                 </div>
               </li>
             </ul>

@@ -22,13 +22,6 @@
                 </div>
               </li>
               <li class="list-group-item">
-                <small class="text-muted">Product image:</small>
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="inputGroupFile01"><i class="fa fa-image"></i></label>
-                  <input type="file" class="form-control" id="inputGroupFile01" multiple @change="handleFile">
-                </div>
-              </li>
-              <li class="list-group-item">
                 <div class="row">
                   <div class="mb-3 col-md-4 p-1">
                     <small class="text-muted">Price:</small>
@@ -83,32 +76,37 @@
   </div>
   
   <div class="modal fade" id="editCategoryModal" data-bs-backdrop="static" aria-hidden="true" aria-labelledby="exampleModalToggleLabel2" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalToggleLabel2">Choose Category</h5>
         </div>
         <div class="modal-body">
-          <div class="modal-body">
-            <ul class="list-group">
-              <li class="list-group-item" v-for="category in categories" :key="category.id">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" v-bind:value="category.category" v-model="editCategoryChips">
-                  <label class="form-check-label" for="flexCheckDefault">
+          <div class="modal-body category-modal">
+            <div class="row">
+              <div 
+                class="col-md-6 p-1"
+                v-for="category in categories" 
+                :key="category.id">
+                <div class="card">
+                  <div class="card-body">
+                    <input 
+                      class="form-check-input me-1" 
+                      type="checkbox" 
+                      v-bind:value="category.category" 
+                      v-model="editCategoryChips">
                     {{ category.category }}
-                  </label>
+                  </div>
                 </div>
-              </li>
-              <li class="list-group-item">
-                <div class="d-grid">
-                  <button class="btn btn-sm btn-outline-success"
-                    @click="loadMoreCategories(nextPageUrl)"
-                    v-bind:class="{ 'disabled' : nextPageUrl == null }">
-                    <i class="fa fa-chevron-down"></i>
-                  </button>
-                </div>
-              </li>
-            </ul>
+              </div>
+            </div>
+            <div class="d-grid p-1">
+              <button class="btn btn-sm btn-outline-success"
+                @click="loadMoreCategories(nextPageUrl)"
+                v-bind:class="{ 'disabled' : nextPageUrl == null }">
+                <i class="fa fa-chevron-down"></i>
+              </button>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -201,5 +199,12 @@ export default {
     cursor: pointer;
     opacity: 0.56;
     margin-left: 8px;
-}
+  }
+  .card-body {
+    padding: 2px 5px 2px 5px;
+  }
+  .category-modal {
+    padding: .5px!important;
+  }
+
 </style>

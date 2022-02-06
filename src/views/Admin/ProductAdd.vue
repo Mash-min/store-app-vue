@@ -8,20 +8,11 @@
     </div>
     <div class="col-lg-9 col-md-12 mt-2">
       <div class="row">
+        <ProductTabs 
+          v-bind:tab="'add-product'"/>
         <div class="col-md-12">
-          <ul class="list-group m-1 mb-5">
-            <li class="list-group-item">
-              <div class="mb-3">
-                <small class="text-muted">Name:</small>
-                <input type="text" class="form-control" placeholder="Enter product name..." v-model="product.name">
-              </div>
-            </li>
-            <li class="list-group-item">
-              <div class="mb-3">
-                <small class="text-muted">Description:</small>
-                <textarea class="form-control" cols="30" rows="8" placeholder="Enter product description" v-model="product.description"></textarea>
-              </div>
-            </li>
+          <!-- =============== Product images ============== -->
+          <ul class="list-group m-1 mb-3">
             <li class="list-group-item">
               <small class="text-muted">Product image:</small>
               <div class="input-group mb-3">
@@ -29,44 +20,112 @@
                 <input type="file" class="form-control" id="inputGroupFile01" multiple @change="handleFile">
               </div>
             </li>
+          </ul>
+          <!-- =============== Product details ============== -->
+          <ul class="list-group m-1 mb-3">
+            <li class="list-group-item">
+              <div class="mb-3">
+                <small class="text-muted">Name:</small>
+                <input 
+                  :class="{ 'is-invalid' : productErrors.name }"
+                  type="text" 
+                  class="form-control" 
+                  placeholder="Enter product name..." 
+                  v-model="newProduct.name">
+                <div class="invalid-feedback">
+                  Please provide product name.
+                </div>
+              </div>
+            </li>
+            <li class="list-group-item">
+              <div class="mb-3">
+                <small class="text-muted">Description:</small>
+                <textarea 
+                  :class="{ 'is-invalid' : productErrors.description }"
+                  class="form-control" 
+                  cols="30" rows="8" 
+                  placeholder="Enter product description" 
+                  v-model="newProduct.description"></textarea>
+                <div class="invalid-feedback">
+                  Please provide product description.
+                </div>
+              </div>
+            </li>
             <li class="list-group-item">
               <div class="row">
                 <div class="mb-3 col-md-4 p-1">
                   <small class="text-muted">Price:</small>
-                  <input type="number" class="form-control" placeholder="Enter product price..." v-model="product.price">
+                  <input 
+                    :class="{ 'is-invalid' : productErrors.price }"
+                    type="number" 
+                    class="form-control" 
+                    placeholder="Enter product price..." 
+                    v-model="newProduct.price">
+                  <div class="invalid-feedback">
+                    Please provide product price.
+                  </div>
                 </div>
                 <div class="mb-3 col-md-4 p-1">
                   <small class="text-muted">Shipping fee:</small>
-                  <input type="number" class="form-control" placeholder="Enter product shipping fee..." v-model="product.shipping_fee">
+                  <input 
+                    :class="{ 'is-invalid' : productErrors.shipping_fee }"
+                    type="number" 
+                    class="form-control" 
+                    placeholder="Enter product shipping fee..." 
+                    v-model="newProduct.shipping_fee">
+                  <div class="invalid-feedback">
+                    Please provide product shipping fee.
+                  </div>
                 </div>
                 <div class="mb-3 col-md-4 p-1">
                   <small class="text-muted">Stock:</small>
-                  <input type="number" class="form-control" placeholder="Enter product stock..." v-model="product.stock">
+                  <input 
+                    :class="{ 'is-invalid' : productErrors.stock }"
+                    type="number" 
+                    class="form-control" 
+                    placeholder="Enter product stock..." 
+                    v-model="newProduct.stock">
+                  <div class="invalid-feedback">
+                    Please provide product stock.
+                  </div>
                 </div>
               </div>
             </li>
+          </ul>
+          <!-- =============== Product categories ============== -->
+          <ul class="list-group m-1 mb-3">
             <li class="list-group-item">
-              <p>
-                <button class="btn btn-sm btn-outline-success" type="button" data-bs-toggle="collapse" data-bs-target="#categoryCollapse" aria-expanded="false" aria-controls="collapseExample">
-                  Choose product category <i class="fa fa-chevron-down"></i>
+              <small class="text-muted">Categories: </small>
+              <div class="row">
+                <div 
+                  class="col-md-6 p-1"
+                  v-for="category in categories" 
+                  :key="category.id">
+                  <div class="card">
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <span class="text-muted"><i class="fa fa-chevron-right"></i> {{ category.category }}</span>
+                        <input 
+                          class="form-check-input me-1" 
+                          type="checkbox" 
+                          v-bind:value="category.category" 
+                          v-model="categoryArray">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="p-1 d-flex justify-content-center">
+                <button class="btn btn-sm btn-outline-success" 
+                  @click="loadMoreCategories(nextPageUrl)"
+                  v-bind:class="{ 'disabled btn-outline-dark' : nextPageUrl == null }">
+                  Load more categories <i class="fa fa-chevron-down"></i>
                 </button>
-              </p>
-              <div class="collapse" id="categoryCollapse">
-                <ul class="list-group">
-                  <li class="list-group-item" v-for="category in categories" :key="category.id">
-                    <input class="form-check-input me-1" type="checkbox" v-bind:value="category.category" v-model="categoryArray">
-                    {{ category.category }}
-                  </li>
-                  <li class="list-group-item">
-                    <button class="btn btn-sm btn-outline-success" 
-                      @click="loadMoreCategories(nextPageUrl)"
-                      v-bind:class="{ 'disabled btn-outline-dark' : nextPageUrl == null }">
-                      Load more categories
-                    </button>
-                  </li>
-                </ul>
               </div>
             </li>
+          </ul>
+          <!-- =============== Product details ============== -->
+          <ul class="list-group m-1 mb-3">
             <li class="list-group-item">
               <div class="mb-3">
                 <small class="text-muted">Tags: </small>
@@ -75,7 +134,8 @@
                   @keypress.prevent.enter="submitTag" >
               </div>
               <div class="chip-container">
-                <div class="chip" 
+                <div 
+                  class="chip" 
                   v-for="(chip, i) of tagChips" 
                   :key="chip.id">
                   {{chip}}
@@ -83,19 +143,81 @@
                 </div>
               </div>
             </li>
+          </ul>
+          <!-- =============== Product variants ============== -->
+          <ul class="list-group m-1 mb-3">
             <li class="list-group-item">
-              <small class="text-muted">Product variants:</small>
-            </li>
-            <li class="list-group-item">
-              <div class="col-md-4">
-                <div class="d-grid">
-                  <button class="btn btn-sm btn-outline-primary" type="submit" @click="submitProduct">
-                    Save product
-                  </button>
+              <small class="text-muted">Variants:</small>
+              <div class="row">
+                <div class="col-md-6 p-1">
+                  <div class="mb-3">
+                    <small class="text-muted">Variant name (ex. Size, Color)</small>
+                    <input type="text" class="form-control" placeholder="Enter variant name..." v-model="variant.name">
+                  </div>
+                  <div class="mb-3">
+                    <form @submit.prevent="submitItem">
+                      <small class="text-muted">Variant items (ex. Small, Medium, Large)</small>
+                      <input type="text" class="form-control" placeholder="Enter variant item..." v-model="variantItem">
+                    </form>
+                  </div>
+                  <div class="d-grid mb-3">
+                    <button 
+                      class="btn btn-sm btn-outline-success"
+                      @click="addVariant">
+                      <i class="fa fa-plus"></i> Add variant
+                    </button>
+                  </div>
+                  <hr>
+                  <div class="variant-i">
+                    <div 
+                      class="card p-2 mb-1" 
+                      v-for="(item, index) in variant.items" 
+                      :key="item">
+                      <div class="d-flex justify-content-between">
+                        <span class="text-muted"><i class="fa fa-chevron-right"></i> {{ item }}</span>
+                        <button 
+                          type="button" 
+                          class="btn-close"
+                          @click="removeItem(index)">
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-6 p-1">
+                  <div 
+                    class="list-group mb-1" 
+                    v-for="(variant, index) in variants" 
+                    :key="variant">
+                    <a class="list-group-item list-group-item-action">
+                      <div class="d-flex justify-content-between">
+                        <small class="mb-1 text-muted fw-bolder">{{ variant.name }}</small>
+                        <button 
+                          type="button" 
+                          class="btn-close"
+                          @click="removeVariant(index)">
+                        </button>
+                      </div>
+                      <small 
+                        class="m-1 p-1 bg-secondary text-white rounded-3"
+                        v-for="item in variant.items"
+                        :key="item">
+                        {{ item }}
+                      </small>
+                    </a>
+                  </div>
                 </div>
               </div>
             </li>
           </ul>
+          <!-- =============== Submit product ============== -->
+          <div class="col-md-4 offset-md-4 m-1">
+            <div class="d-grid">
+              <button class="btn btn-lg btn-outline-success mb-3" @click="submitProduct">
+                <i class="fa fa-save"></i> Save Product
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -106,29 +228,29 @@
 import OffCanvas from '@/components/Admin/OffCanvas'
 import Navbar from '@/components/Admin/Navbar'
 import Sidebar from '@/components/Admin/Sidebar'
+import ProductTabs from '@/components/Admin/ProductTabs'
 import { mapGetters,  mapActions } from 'vuex'
-import Swal from 'sweetalert2'
  
 export default {
   name: 'ProductAdd',
   components: {
-    OffCanvas, Navbar, Sidebar
+    OffCanvas, 
+    Navbar, 
+    Sidebar, 
+    ProductTabs
   },
   data() {
     return {
-      product: {
-        name: '',
-        description: '',
-        price: '',
-        stock: '',
-        shipping_fee: '',
-        user_id: 1,
-      },
       images: [],
       tagInput: '',
       categoryArray: [],
-      categoryUrl: 'api/categories/paginate/5',
-      toast: null
+      categoryUrl: 'api/categories/paginate/6',
+      variants: [],
+      variant: {
+        name: '',
+        items: []
+      },
+      variantItem: ''
     }
   },
   computed: {
@@ -136,7 +258,9 @@ export default {
       'categories', 
       'nextPageUrl', 
       'tagChips',
-      'currentTag'])
+      'currentTag',
+      'newProduct',
+      'productErrors'])
   },
   methods: {
     ...mapActions([
@@ -159,27 +283,38 @@ export default {
       this.images = e.target.files
     },
 
+    submitItem() {
+      this.variant.items.push(this.variantItem)
+      this.variantItem = ''
+    },
+
+    removeItem(index) {
+      this.variant.items.splice(index, 1)
+    },
+
+    removeVariant(index) {
+      this.variants.splice(index, 1)
+    },
+
+    addVariant() {
+      const payload = {
+        name: this.variant.name,
+        items: this.variant.items
+      }
+      this.variants.push(payload)
+      this.variant.name = "",
+      this.variant.items = []
+    },
+
     submitProduct() {
       let payload = {
-        product: this.product,
+        product: this.newProduct,
         images: [...this.images],
         categories: [...this.categoryArray],
         tags: [...this.tagChips],
+        variants: [...this.variants]
       }
-
-      if (this.product.name == "") {
-        Swal.fire("Product name is required")
-      } else if(this.product.description == "") {
-        Swal.fire("Product description is required")
-      } else if(this.product.price == "") {
-        Swal.fire("Product price is required")
-      } else if(this.product.shipping_fee == "") {
-        Swal.fire("Product shipping fee is required")
-      } else if(this.product.stock == "") {
-        Swal.fire("Product stock is required")
-      } else {
-        this.addProduct(payload)
-      }
+      this.addProduct(payload)
     }
   },
   created() {
@@ -211,5 +346,8 @@ export default {
   }
   .modal-footer button {
     width: 100%;
+  }
+  .card-body {
+    padding: 2px 5px 2px 5px;
   }
 </style>

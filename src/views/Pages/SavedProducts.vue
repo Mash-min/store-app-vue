@@ -7,20 +7,16 @@
       </div>
       <!-- SIDEBAR -->
       <div class="col-lg-9 col-md-12 mt-2">
-        <ProfileTab/>
-
+        <ProfileTab />
+        
         <div class="m-1">
-        <NavTabs 
-          v-bind:tab=" 'orders' "/>
+          <NavTabs 
+            v-bind:tab=" 'saved-products' "/>
         </div>
         <div class="m-1">
-          <OrderList />
-        </div>
-        <div class="m-1">
-          <div class="d-flex justify-content-center">
-            <Pagination
-              v-bind:linkData="orderLinks"
-              v-on:emitLink="fetchOrders"/>
+          <div class="row">
+            <SavedProductItem 
+              v-bind:savedProducts="savedProducts"/>
           </div>
         </div>
       </div>
@@ -32,38 +28,29 @@
 import OffCanvas from '@/components/Partials/OffCanvas'
 import Navbar from '@/components/Partials/Navbar'
 import Sidebar from '@/components/Partials/Sidebar'
+import SavedProductItem from '@/components/Partials/SavedProductItem'
 import NavTabs from '@/components/Partials/NavTabs'
-// import OrderItem from '@/components/Partials/OrderItem'
-import Pagination from '@/components/Partials/Pagination'
 import ProfileTab from '@/components/Partials/ProfileTab'
-import OrderList from '@/components/Partials/OrderList'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  name: 'Account',
+  name: 'SavedProducts',
   components: {
     OffCanvas, 
     Navbar, 
     Sidebar, 
-    NavTabs, 
-    // OrderItem, 
-    Pagination,
-    ProfileTab,
-    OrderList
-  },
-  data() {
-    return {
-      url: 'api/orders/status/on-process'
-    }
+    SavedProductItem, 
+    NavTabs,
+    ProfileTab
   },
   computed: {
-    ...mapGetters(['user', 'orders', 'orderLinks'])
+    ...mapGetters(['user', 'savedProducts'])
   },
   methods: {
-    ...mapActions(['fetchOrders'])
+    ...mapActions(['fetchSavedProducts'])
   },
   created() {
-    this.fetchOrders(this.url)
+    this.fetchSavedProducts()
   }
 }
 </script>

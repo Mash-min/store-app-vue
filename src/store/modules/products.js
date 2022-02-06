@@ -1,102 +1,147 @@
 import axios from "axios"
 import Swal from "sweetalert2"
 import showLoader from '@/loaders'
+import router from '@/router'
 
 const state = {
   product: {},
   productLinks: [],
   products: [],
+  newProduct: {
+    name: '',
+    description: '',
+    price: '',
+    stock: '',
+    shipping_fee: '',
+  },
+  productErrors: []
 }
 
 const getters = {
   product: (state) => state.product,
   products: (state) => state.products,
-  productLinks: (state) => state.productLinks
+  productLinks: (state) => state.productLinks,
+  newProduct: (state) => state.newProduct,
+  productErrors: (state) => state.productErrors
 }
 
 const actions = {
-  fetchProducts({ commit }, url) {
+  async fetchProducts({ commit }, url) {
     commit('setProducts', null)
     commit('setProductLinks', null)
-    showLoader("Loading")
-    axios.get(url)
-    .then(res => {
-      // console.log(res)
+    showLoader("Loading...")
+    try {
+      const response = await axios.get(url)
+      commit('setProducts', response.data.products.data)
+      commit('setProductLinks', response.data.products.links)
       Swal.close()
-      commit('setProducts', res.data.products.data)
-      commit('setProductLinks', res.data.products.links)
-    })
-    .catch(err => console.log(err.response))
+    } catch(e) {
+      Swal.fire({ title: e.response.data.message, icon: 'warning'})
+      console.error(e.response)
+    }
   },
 
-  findProduct({ commit }, slug) {
+  async findProduct({ commit }, slug) {
+    commit('clearCart')
     commit('setProduct', {})
     showLoader("Loading...")
-    axios.get(`api/products/${slug}`)
-    .then(res => {
+    try {
+      const response = await axios.get(`api/products/${slug}`)
+      commit('setProduct', response.data.product)
       Swal.close()
-      commit('setProduct', res.data.product)
-    })
-    .catch(err => console.log(err.response))
+    } catch(e) {
+      Swal.close()
+      if(e.response.status == 404) {
+        router.push({ path: '/not-found' })
+      } else {
+        console.error(e.response)
+      }
+    }
   },
 
   async addProduct({ commit }, payload) {
     showLoader("Adding product...")
+    commit('setProductErrors', [])
     try {
       // ============ Upload product data=============
       const response = await axios.post('api/products', payload.product)
       let productId = response.data.product.id
-      commit('setProduct', response.data.product)
-
+      commit('setNewProduct')
       // ============ Upload product tags=============
       const tags = await axios.post('api/product-tags', {
         product_id: productId,
         tags: payload.tags
       })
       console.log(tags)
-
       // ============ Upload product categories=============
       const categories = await axios.post('api/product-categories', {
         product_id: productId,
         categories: payload.categories
       })
       console.log(categories)
-
       // ============ Upload product image =============
-      payload.images.forEach(image => {
-        let formData = new FormData()
-        formData.append('file', image)
-        formData.append('upload_preset', 'c12awmea')
-        fetch('https://api.cloudinary.com/v1_1/dv1tdnpbu/image/upload', {
-          method: 'POST',
-          body: formData
+      // payload.images.forEach(image => {
+      //   let formData = new FormData()
+      //   formData.append('file', image)
+      //   formData.append('upload_preset', 'c12awmea')
+      //   fetch('https://api.cloudinary.com/v1_1/dv1tdnpbu/image/upload', {
+      //     method: 'POST',
+      //     body: formData
+      //   })
+      //   .then(res => { return res.json() })
+      //   .then(data => {
+      //     console.log(data)
+      //     axios.post('api/product-images', {
+      //       image: data.url,
+      //       product_id: productId
+      //     })
+      //   })
+      //   .catch(err => console.log(err.response))
+      // })
+      // ============ Upload product variants =============
+      payload.variants.forEach(variant => {
+        axios.post('api/variants', {
+          product_id: productId,
+          title: variant.name
         })
-        .then(res => { return res.json() })
-        .then(data => {
-          console.log(data)
-          axios.post('api/product-images', {
-            image: data.url,
-            product_id: productId
+        .then(res => {
+          axios.post('api/variant-items', {
+            variant_id: res.data.variant.id,
+            items: variant.items
           })
         })
-        .catch(err => console.log(err.response))
       })
-
       Swal.fire("Product added!")
-    } catch (err) {
+      commit('clearTagChips')
+    } catch (e) {
       Swal.close()
-      console.error(err.response.data.errors)
+      console.error(e.response)
+      commit('setProductErrors', e.response.data.errors)
     }
   },
 
-  async deleteProduct({ commit }, id) {
-    try {
-      const response = await axios.delete(`api/products/${id}`)
-      commit('removeProduct', id)
-      Swal.fire(response.data.message)
-    } catch (error) {
-      console.error(error.response)
-    }
+  deleteProduct({ commit }, payload) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "The selected product will be deleted.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#0d6efd',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it'
+    }).then(result => {
+      if(result.isConfirmed) {
+        showLoader("Deleting product...")
+        axios.delete(`api/products/${ payload.id }`)
+        .then(response => {
+          commit('removeProduct', payload.index)
+          Swal.fire({ title: response.data.message, icon: 'success' })
+        })
+        .catch(e => {
+          console.error(e.response)
+        })
+      }
+    })
   },
 
   async updateProduct({ commit }, payload) {
@@ -119,7 +164,7 @@ const actions = {
         categories: payload.categories
       })
       console.log(categories.data.message)
-      Swal.fire("Product updated!")
+      Swal.fire({ title: "Product updated", icon: 'success' })
     } catch (error) {
       Swal.close()
       console.error(error.response)
@@ -129,7 +174,6 @@ const actions = {
   archiveProduct({ commit }, id) {
     axios.put(`api/products/archive-product/${id}`)
     .then(res => {
-      console.log(res)
       commit('updateProduct', res.data.product)
     })
     .catch(err => console.log(err.response))
@@ -138,7 +182,6 @@ const actions = {
   restoreProduct({ commit }, id) {
     axios.put(`api/products/restore-product/${id}`)
     .then(res => {
-      console.log(res)
       commit('updateProduct', res.data.product)
     })
     .catch(err => console.log(err.response))
@@ -163,15 +206,36 @@ const actions = {
         Swal.fire("Variants saved")
       })
     })
+  },
+
+  async searchProduct({ commit }, payload) {
+    showLoader("Searching...")
+    try {
+      const response = await axios.get(`api/products/search/${payload}`)
+      commit('setProducts', response.data.products.data)
+      commit('setProductLinks', response.data.products.links)
+      Swal.close()
+    } catch(e){
+      Swal.close()
+      console.error(e.response)
+    }
   }
 }
 
 const mutations = {
   setProduct: (state, product) => (state.product = product),
+  setNewProduct: (state) => {
+    state.newProduct.name = ''
+    state.newProduct.description = ''
+    state.newProduct.price = ''
+    state.newProduct.shipping_fee = ''
+    state.newProduct.stock = ''
+  },
   setProducts: (state, products) => (state.products = products),
   setProductLinks: (state, links) => (state.productLinks = links),
-  removeProduct: (state, id) => (state.products.splice(state.products.findIndex(product => product.id == id), 1)),
-  updateProduct: (state, data) => (state.products[state.products.findIndex(product => product.id == data.id)] = data)
+  removeProduct: (state, index) => (state.products.splice(index, 1)),
+  updateProduct: (state, data) => (state.products[state.products.findIndex(product => product.id == data.id)] = data),
+  setProductErrors: (state, errors) => (state.productErrors = errors)
 }
 
 export default {

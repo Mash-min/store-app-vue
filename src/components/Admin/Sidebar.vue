@@ -2,10 +2,10 @@
   <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar d-none d-lg-block d-xxl-block" style="width: 280px;">
     <ul class="nav nav-pills flex-column mb-auto">
       <li class="nav-item">
-        <a href="/" class="nav-link text-white">
+        <router-link to="/" class="nav-link text-white">
           <i class="fa fa-home"></i>
           <span class="ms-3">Home</span>
-        </a>
+        </router-link>
       </li>
       <li class="nav-item">
         <router-link to="/admin/dashboard" class="nav-link text-white">
