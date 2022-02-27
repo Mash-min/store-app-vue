@@ -30,6 +30,7 @@ const actions = {
       const response = await axios.get(url)
       commit('setCarts', response.data.carts.data)
       commit('setCartLinks', response.data.carts.links)
+      console.log(response)
       Swal.close()
     } catch(err) {
       console.error(err.response)

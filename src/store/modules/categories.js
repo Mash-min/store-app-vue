@@ -31,7 +31,10 @@ const actions = {
       commit('setCategoryLinks', res.data.categories.links)
       commit('setNextPageUrl', res.data.categories.next_page_url)
     })
-    .catch(err => console.log(err.response))
+    .catch(err => {
+      Swal.close()
+      console.log(err.response)
+    })
   },
 
   addCategory({ commit }, data) {
@@ -79,7 +82,10 @@ const actions = {
         res.data.categories.data.forEach(category => commit('loadMoreCategories', category))
         commit('setNextPageUrl', res.data.categories.next_page_url)
       })
-      .catch(err => console.log(err.response))
+      .catch(err => {
+        console.log(err.response)
+        Swal.close()
+      })
     }
   }
 

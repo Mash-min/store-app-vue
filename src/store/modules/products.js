@@ -80,24 +80,24 @@ const actions = {
       })
       console.log(categories)
       // ============ Upload product image =============
-      // payload.images.forEach(image => {
-      //   let formData = new FormData()
-      //   formData.append('file', image)
-      //   formData.append('upload_preset', 'c12awmea')
-      //   fetch('https://api.cloudinary.com/v1_1/dv1tdnpbu/image/upload', {
-      //     method: 'POST',
-      //     body: formData
-      //   })
-      //   .then(res => { return res.json() })
-      //   .then(data => {
-      //     console.log(data)
-      //     axios.post('api/product-images', {
-      //       image: data.url,
-      //       product_id: productId
-      //     })
-      //   })
-      //   .catch(err => console.log(err.response))
-      // })
+      payload.images.forEach(image => {
+        let formData = new FormData()
+        formData.append('file', image)
+        formData.append('upload_preset', 'c12awmea')
+        fetch('https://api.cloudinary.com/v1_1/dv1tdnpbu/image/upload', {
+          method: 'POST',
+          body: formData
+        })
+        .then(res => { return res.json() })
+        .then(data => {
+          console.log(data)
+          axios.post('api/product-images', {
+            image: data.url,
+            product_id: productId
+          })
+        })
+        .catch(err => console.log(err.response))
+      })
       // ============ Upload product variants =============
       payload.variants.forEach(variant => {
         axios.post('api/variants', {

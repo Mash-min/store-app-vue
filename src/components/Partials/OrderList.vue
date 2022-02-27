@@ -8,6 +8,7 @@
         <div class="card p-2">
           <div class="row">
             <div class="col-md-3 col-6 p-1">
+              <img :src="order.cart.product.images[0].image" alt="" class="order-product-image">
               <small class="fw-bolder"><i class="fa fa-chevron-right"></i> {{ order.cart.product.name }}</small><br>
               <small class="text-muted fst-italic">{{ order.slug }}</small><br>
               <small 
@@ -53,3 +54,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .order-product-image {
+    width: 100%;
+  }
+</style>

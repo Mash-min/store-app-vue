@@ -76,12 +76,11 @@ const actions = {
     }
   },
 
-  async checkAdmin({ commit }) {
+  async checkAdmin() {
     try {
       const response = await axios.get('api/users')
       if(response.data.user.role != 'admin') {
-        router.push({ path: '/account' })
-        commit('setAdmin', false)
+        router.push({ path: '/not-found' })
       }
     } catch(e) {
       router.push({ path: '/' })

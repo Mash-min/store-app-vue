@@ -42,7 +42,8 @@
                       :value="cart.slug"
                       v-model="selectedCarts">
                   </div> 
-                  {{ cart.product.name }}
+                  <img :src="cart.product.images[0].image" alt="" class="cart-image"><br>
+                  <span class="ms-1">{{ cart.product.name }}</span>
                 </small><br>
                 <small 
                   class="bg-success text-white ms-1 p-1 rounded-2"
@@ -106,3 +107,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .cart-image {
+    width: 100px;
+    height: 100px;
+  }
+</style>
