@@ -14,7 +14,6 @@
                 class="fw-bolder"
                 :class="{ 'text-danger' : order.status == 'canceled' }">
                 <i class="fa fa-chevron-right"></i>
-                <img :src="order.cart.product.images[0].image" alt="">
                 <span class="ms-1">{{ order.cart.product.name }}</span>
               </small><br>
               <small class="text-muted fst-italic">{{ order.slug }}</small><br>

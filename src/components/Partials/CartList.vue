@@ -60,7 +60,7 @@
               <div class="col-md-4 mt-3 col-12" style="text-align: center">
                 <small class="text-muted">Total: </small>
                 <small class="fw-bolder text-success">
-                  ₱ {{ cart.product.price * cart.quantity + cart.product.shipping_fee }}
+                  ₱ {{ (Number(cart.product.price) * Number(cart.quantity) + Number(cart.product.shipping_fee)).toFixed(2) }}
                 </small><br>
               </div>
             </div>
