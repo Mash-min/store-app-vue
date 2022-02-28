@@ -29,7 +29,7 @@
                   </div>
                   <div class="mb-3 col-md-4 p-1">
                     <small class="text-muted">Shipping fee:</small>
-                    <input type="number" class="form-control" placeholder="Enter product shipping fee..." v-model="product.shipping_fee">
+                    <input type="text" class="form-control" placeholder="Enter product shipping fee..." v-model="product.shipping_fee">
                   </div>
                   <div class="mb-3 col-md-4 p-1">
                     <small class="text-muted">Stock:</small>
@@ -68,7 +68,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </div>
         </div>
       </div>

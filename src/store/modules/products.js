@@ -96,7 +96,7 @@ const actions = {
             product_id: productId
           })
         })
-        .catch(err => console.log(err.response))
+        .catch(err => console.log(err))
       })
       // ============ Upload product variants =============
       payload.variants.forEach(variant => {
